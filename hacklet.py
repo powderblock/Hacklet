@@ -4,6 +4,37 @@ import cv2
 import pytesseract
 from PIL import Image
 
+words = [["usurp", "seize", "seize and take control without authority"],
+         ["moiety"]
+         ["portentous"]
+         ["harbinger"]
+         ["partisan"]
+         ["hallowed"]
+         ["auspicious"]
+         ["filial"]
+         ["obsequious"]
+         ["retrograde"]
+         ["jocund"]
+         ["discourse"]
+         ["truant"]
+         ["countenance"]
+         ["tenable"]
+         ["besmirch"]
+         ["prodigal"]
+         ["libertine"]
+         ["unfledged"]
+         ["censure"]
+         ["husbandry"]
+         ["parley"]
+         ["beguile"]
+         ["traduce"]
+         ["canonize"]
+         ["sovereignty"]
+         ["adulterate"]
+         ["enmity"]
+         ["pernicious"]
+         ["antic"]]
+
 printscreen_pil =  ImageGrab.grab(bbox=(760,575, 1255,920))
 printscreen_numpy = np.array(printscreen_pil.getdata(), dtype='uint8').reshape((printscreen_pil.size[1],printscreen_pil.size[0],3))
 
