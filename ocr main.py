@@ -7,7 +7,7 @@ from PIL import Image
 
 #d = enchant.Dict("en_US")
 
-ocr_guess = pytesseract.image_to_string(Image.open("screencap.png"))
+ocr_guess = pytesseract.image_to_string(Image.open("answers.png"))
 
 words_ocr = ocr_guess.split(" ")
 
