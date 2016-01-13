@@ -8,8 +8,9 @@ import sys
 import re
 import sys
 from collections import *
+import pytesseract
 
-words = [["usurp", "take over", "seize", "seize and take control without authority", "assuming"],
+words = [["usurp", "assume", "take over", "seize", "seize and take control without authority", "assuming"],
          ["moiety", "one of two approximately equal parts", "one of two basic subdivisions of a tribe"],
          ["portentous", "ominously prophetic", "of momentous or ominous significance", "prophetic"],
          ["harbinger", "herald", "forerunner", "something indicating the approach of something or someone", "precursor"],
@@ -22,17 +23,17 @@ words = [["usurp", "take over", "seize", "seize and take control without authori
          ["jocund", "joyous", "merry", "full of or showing high-spirited merriment", "at a New Year's celebration"],
          ["discourse", "conversation", "talk at length and formally about a topic", "debate", "extended verbal expression in speech or writing", "hold forth"],
          ["truant", "absent", "someone who shriks duty" "one who is absent from school without permission", "absent without permission"],
-         ["countenance", "face", "the appearance conveyed by a person's face", "visage"],
+         ["countenance", "prohibit", "face", "the appearance conveyed by a person's face", "visage"],
          ["tenable", "rational", "sensible", "based on sound reasoning or evidence"],
          ["besmirch", "cleanse", "a tabloid magazine", "smear so as to make dirty or stained", "denigrate"],
          ["prodigal", "gambling", "recklessly wasteful", "wasteful"],
-         ["libertine", "immoral", "unrestrained by convention or morality", "a dissolute person", "debauched"],
+         ["libertine", "debauchee", "immoral", "unrestrained by convention or morality", "a dissolute person", "debauched"],
          ["unfledged", "young and inexperienced", "inexperienced", "callow"],
          ["censure", "harsh criticism or disapproval", "reprimand", "rebuke formally"],
          ["husbandry", "the practice of cultivating the land or raising stock", "by helping to provide food", "farming"],
          ["parley", "discuss, as between enemies", "a negotiation between enemies"],
-         ["beguile", "a flirtatious man charms everyone he meets", "trick", "attract; cause to be enamored", "fascinated", "enchant", "mesmerizes"],
-         ["traduce", "slander", "speak unfavorably about", "defame", "denigrate", "malign"],
+         ["beguile", "influence by slyness", "a flirtatious man charms everyone he meets", "trick", "attract; cause to be enamored", "fascinated", "enchant", "mesmerizes"],
+         ["traduce", "disparage", "slander", "speak unfavorably about", "defame", "denigrate", "malign"],
          ["canonize", "revere", "treat as sacred people", "treat as a sacred person", "declare (a dead person) to be a saint", "revere"],
          ["sovereignty", "the authority of a state to govern another state", "royal authority; the dominion of a monarch", "government free from external control"],
          ["adulterate", "make impure by adding a foreign or inferior substance", "mixed with impurities"],
@@ -139,13 +140,35 @@ def lookForAnswer():
             green = answers[y, x, 1]
             blue = answers[y, x, 0]
             if red == 105 and green == 170 and blue == 68:
-                answerBlock = answers[y - 10:height, x - 5:width]
+                answerBlock = answers[y - 10:width, x - 5:height]
                 cv2.imwrite("answers.png", answerBlock)
                 return
 
 def multipleChoice():
     lookForWord()
     lookForAnswer()
+    ocr_guess = pytesseract.image_to_string(Image.open("word.png"))
+
+    words_ocr = ocr_guess.split("\n")
+    answers_guess = pytesseract.image_to_string(Image.open("answers.png")).replace("0 ", "").replace("O ", "")
+
+    answers_guess = answers_guess.split("\n")
+
+    for word in words:
+        if word[0] == words_ocr[0]:
+            for answers in word:
+                for answer in answers_guess:
+                    if answers == answer:
+                        print answer.index()
+
+def lookForPlay():
+    print "Look for play."
+
+def spell():
+    lookForPlay()
 
 if(classify(arrayOutput("screencap.png"), images) == "multi"):
     multipleChoice()
+
+else:
+    spell()
